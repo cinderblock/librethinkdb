@@ -7,40 +7,43 @@
 #include <arpa/inet.h>
 #include <unistd.h>
 
-struct rethinkdb_connection {
-        char *addr;
-        unsigned short port;
-	int timeout;
-        // the socket
-        int s;
-        // version sent ?
-        int version_sent;
-        // buffer for the query
-        void *query_buf;
-        // buffer for the response
-        void *response_buf;
-        // token
-        int64_t token;
+class RethinkDB {
+ char *addr;
+ unsigned short port;
+ int timeout;
+ // the socket
+ int s;
+ // version sent ?
+ int version_sent;
+ // buffer for the query
+ void *query_buf;
+ // buffer for the response
+ void *response_buf;
+ // token
+ int64_t token;
+
+public:
+
+ RethinkDB (char *, unsigned short, int);
+
+ int send(void *, size_t);
+ int connect();
+ int send_version();
+ int check();
+ int send_protobuf(size_t);
+ int send_query(Query *);
+ int recv(void *, size_t);
+ int32_t response_size();
+ Response *response();
+ int response_check(int);
+ char **response_list(unsigned int *);
+ char *response_json();
+ int create_db(char *);
+ int create_table(char *, char *, char *, char *, int);
+ char **list_db(unsigned int *);
+ char **table(char *, char *, int, unsigned int *);
+ char *get(char *, char *, char *, char *, int);
+ char **filter(char *, char *, char *, unsigned int *);
+ char *insert(char *, char *, char **, unsigned int, int);
+
 };
-
-
-int rethinkdb_send(struct rethinkdb_connection *, void *, size_t);
-int rethinkdb_connect(struct rethinkdb_connection *);
-int rethinkdb_send_version(struct rethinkdb_connection *);
-int rethinkdb_check(struct rethinkdb_connection *);
-int rethinkdb_send_protobuf(struct rethinkdb_connection *, size_t);
-int rethinkdb_send_query(struct rethinkdb_connection *, Query *);
-int rethinkdb_recv(struct rethinkdb_connection *, void *, size_t);
-int32_t rethinkdb_response_size(struct rethinkdb_connection *);
-Response *rethinkdb_response(struct rethinkdb_connection *);
-int rethinkdb_response_check(struct rethinkdb_connection *, int);
-char **rethinkdb_response_list(struct rethinkdb_connection *, unsigned int *);
-char *rethinkdb_response_json(struct rethinkdb_connection *);
-int rethinkdb_create_db(struct rethinkdb_connection *, char *);
-int rethinkdb_create_table(struct rethinkdb_connection *, char *, char *, char *, char *, int);
-char **rethinkdb_list_db(struct rethinkdb_connection *, unsigned int *);
-char **rethinkdb_table(struct rethinkdb_connection *, char *, char *, int, unsigned int *);
-struct rethinkdb_connection *rethinkdb_init(char *, unsigned short, int);
-char *rethinkdb_get(struct rethinkdb_connection *, char *, char *, char *, char *, int);
-char **rethinkdb_filter(struct rethinkdb_connection *, char *, char *, char *, unsigned int *);
-char *rethinkdb_insert(struct rethinkdb_connection *, char *, char *, char **, unsigned int, int);
