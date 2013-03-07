@@ -8,12 +8,13 @@
 #include <arpa/inet.h>
 #include <unistd.h>
 
+#include <protobuf-c.h>
+
 /*
 	send the specified amount of datas to the socket
  */
-int RethinkDB::send(void *buf, size_t len) {
+int RethinkDB::send(void const * ptr, size_t len) {
  size_t remains = len;
- void *ptr = buf;
  while (remains) {
   ssize_t rlen = write(this->s, ptr, remains);
   if (rlen <= 0) {
@@ -94,7 +95,7 @@ int RethinkDB::send_protobuf(size_t len) {
  */
 int RethinkDB::send_query(Query *q) {
  size_t len = query__get_packed_size(q);
- this->query_buf = malloc(len + 4);
+ this->query_buf = (char *)malloc(len + 4);
  query__pack(q, this->query_buf + 4);
  int ret = protobuf(len);
  free(this->query_buf);
