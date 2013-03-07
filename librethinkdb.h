@@ -19,7 +19,7 @@ public:
 
  RethinkDB (char *, unsigned short, int);
 
- int send(void *, size_t);
+ int send(const void *, size_t);
  int connect();
  int send_version();
  int check();

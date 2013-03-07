@@ -8,8 +8,6 @@
 #include <arpa/inet.h>
 #include <unistd.h>
 
-#include <protobuf-c.h>
-
 /*
 	send the specified amount of datas to the socket
  */
@@ -96,8 +94,8 @@ int RethinkDB::send_protobuf(size_t len) {
 int RethinkDB::send_query(Query *q) {
  size_t len = query__get_packed_size(q);
  this->query_buf = (char *)malloc(len + 4);
- query__pack(q, this->query_buf + 4);
- int ret = protobuf(len);
+ query__pack(q, (uint8_t *)(this->query_buf + 4));
+ int ret = send_protobuf(len);
  free(this->query_buf);
  this->query_buf = NULL;
  return ret;
@@ -148,7 +146,7 @@ Response *RethinkDB::response() {
   this->response_buf = NULL;
   return NULL;
  }
- return response__unpack(NULL, len, this->response_buf);
+ return response__unpack(NULL, len, (const uint8_t *)this->response_buf);
 }
 
 /*
@@ -428,17 +426,17 @@ char *RethinkDB::insert(char *dbname, char *tablename, char **json, unsigned int
 
  in.table_ref = &tr;
  in.n_terms = json_n;
- in.terms = malloc(sizeof (Term *) * json_n);
+ in.terms = (Term**)malloc(sizeof (Term *) * json_n);
  unsigned int i;
  for (i = 0; i < json_n; i++) {
-  in.terms[i] = malloc(sizeof (Term));
+  in.terms[i] = (Term*)malloc(sizeof (Term));
   term__init(in.terms[i]);
   in.terms[i]->type = TERM__TERM_TYPE__JSON;
   in.terms[i]->jsonstring = json[i];
  }
  in.overwrite = upsert;
 
- if (!send_query(this, &q))
+ if (!send_query(&q))
   json_r = response_json();
 
  for (i = 0; i < json_n; i++) {
