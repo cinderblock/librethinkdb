@@ -1,11 +1,4 @@
 #include "query_language.pb-c.h"
-#include <sys/socket.h>
-#include <string.h>
-#include <netinet/in.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <arpa/inet.h>
-#include <unistd.h>
 
 class RethinkDB {
  char *addr;
@@ -16,7 +9,7 @@ class RethinkDB {
  // version sent ?
  int version_sent;
  // buffer for the query
- void *query_buf;
+ char *query_buf;
  // buffer for the response
  void *response_buf;
  // token

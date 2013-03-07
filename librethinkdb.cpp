@@ -1,5 +1,13 @@
 #include "librethinkdb.h"
 
+#include <sys/socket.h>
+#include <string.h>
+#include <netinet/in.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <arpa/inet.h>
+#include <unistd.h>
+
 /*
 	send the specified amount of datas to the socket
  */
@@ -36,7 +44,7 @@ int RethinkDB::connect() {
  sin.sin_addr.s_addr = inet_addr(this->addr);
  sin.sin_port = htons(this->port);
 
- if (connect(this->s, (struct sockaddr *) &sin, sizeof (sin))) {
+ if (::connect(this->s, (struct sockaddr *) &sin, sizeof (sin))) {
   close(this->s);
   this->s = -1;
   return -1;
@@ -429,7 +437,7 @@ char *RethinkDB::insert(char *dbname, char *tablename, char **json, unsigned int
  }
  in.overwrite = upsert;
 
- if (s!end_query(this, &q))
+ if (!send_query(this, &q))
   json_r = response_json();
 
  for (i = 0; i < json_n; i++) {
