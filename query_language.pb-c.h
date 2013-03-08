@@ -549,7 +549,7 @@ struct  _Query
 };
 #define QUERY__INIT \
  { PROTOBUF_C_MESSAGE_INIT (&query__descriptor) \
-    , 0, 0, NULL, NULL, NULL }
+    , (Query__QueryType)0, 0, NULL, NULL, (MetaQuery *)NULL }
 
 
 struct  _Response__Backtrace
