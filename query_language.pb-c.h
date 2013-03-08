@@ -250,7 +250,7 @@ struct  _Term
 };
 #define TERM__INIT \
  { PROTOBUF_C_MESSAGE_INIT (&term__descriptor) \
-    , 0, NULL, NULL, NULL, NULL, NULL, 0,0, NULL, NULL, 0,0, 0,NULL, 0,NULL, NULL, NULL, NULL }
+    , (Term__TermType)0, NULL, NULL, NULL, NULL, NULL, 0,0, NULL, NULL, 0,0, 0,NULL, 0,NULL, NULL, NULL, NULL }
 
 
 struct  _Builtin__Filter
@@ -339,7 +339,7 @@ struct  _Builtin
 };
 #define BUILTIN__INIT \
  { PROTOBUF_C_MESSAGE_INIT (&builtin__descriptor) \
-    , 0, NULL, 0,NULL, 0,0, NULL, NULL, NULL, 0,NULL, NULL, NULL, NULL }
+    , (Builtin__BuiltinType)0, NULL, 0,NULL, 0,(Builtin__Comparison)0, NULL, NULL, NULL, 0,NULL, NULL, NULL, NULL }
 
 
 struct  _Reduction
@@ -507,7 +507,7 @@ struct  _WriteQuery
 };
 #define WRITE_QUERY__INIT \
  { PROTOBUF_C_MESSAGE_INIT (&write_query__descriptor) \
-    , 0, 0,1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL }
+    , (WriteQuery__WriteQueryType)0, 0,1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL }
 
 
 struct  _MetaQuery__CreateTable
@@ -535,7 +535,7 @@ struct  _MetaQuery
 };
 #define META_QUERY__INIT \
  { PROTOBUF_C_MESSAGE_INIT (&meta_query__descriptor) \
-    , 0, NULL, NULL, NULL }
+    , (MetaQuery__MetaQueryType)0, NULL, NULL, NULL }
 
 
 struct  _Query
@@ -549,7 +549,7 @@ struct  _Query
 };
 #define QUERY__INIT \
  { PROTOBUF_C_MESSAGE_INIT (&query__descriptor) \
-    , (Query__QueryType)0, 0, NULL, NULL, (MetaQuery *)NULL }
+    , (Query__QueryType)0, 0, NULL, NULL, NULL }
 
 
 struct  _Response__Backtrace
@@ -575,7 +575,7 @@ struct  _Response
 };
 #define RESPONSE__INIT \
  { PROTOBUF_C_MESSAGE_INIT (&response__descriptor) \
-    , 0, 0, 0,NULL, NULL, NULL }
+    , (Response__StatusCode)0, 0, 0,NULL, NULL, NULL }
 
 
 /* TableRef methods */
